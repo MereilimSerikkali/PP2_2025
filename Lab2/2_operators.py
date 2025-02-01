@@ -8,3 +8,4 @@ print((6+3) - (6+3))
 print(100+ 5*3)
 
 #Example 4
+print(5 + 4 - 7 + 3)
