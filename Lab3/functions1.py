@@ -36,7 +36,7 @@ def reverse(sentence):
     return ' '.join(words[::-1])
 #Ex7
 def has_33(nums):
-    for i in range(len(nums - 1)):
+    for i in range(len(nums) - 1):
         if nums[i] == 3 and nums[i + 1] == 3:
             return True
         return False
@@ -48,7 +48,7 @@ def spy_game(nums):
         if num == code[index]:
             index += 1
             if index == len(code):
-                reutrn True
+                return True
     return False
 #Ex9
 def sphere_volume(radius):
@@ -84,16 +84,16 @@ def guess_the_num():
         else:
             print(f"Good job, {name}! You guessed my number in {guesses} guesses")
             break
-print(grams_to_ounces(100))
-print(fahrenheit_to_centigrade(98.6))
+print(ounces(100))
+print(c(98.6))
 print(solve(35, 94))
 print(filter_prime([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
 print(permutations("abc"))
-print(reverse_sentence("We are ready"))
+print(reverse("We are ready"))
 print(has_33([1, 3, 3]))
 print(spy_game([1, 2, 4, 0, 0, 7, 5]))
 print(sphere_volume(5))
 print(unique_elements([1, 2, 2, 3, 4, 4, 5]))
 print(is_palindrome("madam"))
 histogram([4, 9, 7])
-guess_the_number()        
+guess_the_num()        
