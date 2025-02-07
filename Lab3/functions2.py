@@ -98,12 +98,18 @@ def average_imdb_by_category(movies_list, category):
     return average_imdb(category_movies)
 
 dark_knight = next(movie for movie in movies if movie["name"] == "Dark Knight")
+print("*****")
 print(is_above_5_5(dark_knight)) 
+print("*****")
 print("Movies with IMDB score above 5.5:")
 for movie in movies_above_5_5(movies):
-    print(dark_knight["name"])
+    print(movie["name"])
+print("*****")
 print("'Romance' category:")
 for movie in movies_by_category(movies, "Romance"):
     print(movie["name"])
-print(average_imdb(movies))
+print("*****")
+print("Avg imdb is", average_imdb(movies))
+print("*****")
 print("Average IMDB 'Romance' category:", average_imdb_by_category(movies, "Romance"))
+print("*****")
