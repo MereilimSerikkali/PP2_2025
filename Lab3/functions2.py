@@ -80,12 +80,19 @@ movies = [
 
 def is_above_5_5(movie):
     return movie["imdb"] > 5.5
-
 def movies_above_5_5(movies_list):
-    return [movie for movie in movies_list if movie["imdb"] > 5.5]
+    result = []
+    for movie in movies_list:
+        if movie["imdb"] > 5.5:
+            result.append(movie)
+    return result
 
 def movies_by_category(movies_list, category):
-    return [movie for movie in movies_list if movie["category"] == category]
+    result = []
+    for movie in movies_list:
+        if movie["category"] == category:
+            result.append(movie)
+    return result
 
 def average_imdb(movies_list):
     if not movies_list:
@@ -97,7 +104,12 @@ def average_imdb_by_category(movies_list, category):
     category_movies = movies_by_category(movies_list, category)
     return average_imdb(category_movies)
 
-dark_knight = next(movie for movie in movies if movie["name"] == "Dark Knight")
+dark_knight = None
+for movie in movies:
+    if movie["name"] == "Dark Knight":
+        dark_knight = movie
+        break
+
 print("*****")
 print(is_above_5_5(dark_knight)) 
 print("*****")
