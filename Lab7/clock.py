@@ -1,69 +1,74 @@
 import pygame
-import time
 import math
-
+from datetime import datetime
 pygame.init()
 
-# Constants
-WIDTH, HEIGHT = 400, 400
-CENTER = (WIDTH // 2, HEIGHT // 2)
-BACKGROUND_COLOR = (255, 255, 255)
+# Set up display (smaller screen)
+screen_width, screen_height = 230, 230  # Smaller screen size
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Mickey Clock")
 
 # Load images
-clock_face = pygame.image.load("clock.png")
-minute_hand = pygame.image.load("min_hand.png")
-second_hand = pygame.image.load("sec_hand.png")
+clock_face = pygame.image.load('clock.png')
+minute_hand = pygame.image.load('min_hand.png')
+second_hand = pygame.image.load('min_hand.png')  # Assuming same image for simplicity
 
-# Scale images
-clock_face = pygame.transform.scale(clock_face, (WIDTH, HEIGHT))
-minute_hand = pygame.transform.scale(minute_hand, (100, 10))
-second_hand = pygame.transform.scale(second_hand, (120, 10))
+# Scale down the images (adjust the scale factor as needed)
+scale_factor = 0.5  # Reduce size to 50%
+clock_face = pygame.transform.scale(clock_face, (int(clock_face.get_width() * scale_factor), int(clock_face.get_height() * scale_factor)))
+minute_hand = pygame.transform.scale(minute_hand, (int(minute_hand.get_width() * scale_factor), int(minute_hand.get_height() * scale_factor)))
+second_hand = pygame.transform.scale(second_hand, (int(second_hand.get_width() * scale_factor), int(second_hand.get_height() * scale_factor)))
 
-def blitRotate(surf, image, pos, originPos, angle):
-    if not isinstance(surf, pygame.Surface):
-        print("Error: surf is not a valid pygame.Surface")
-        return
+# Get the center of the screen
+center_x = screen_width // 2
+center_y = screen_height // 2
 
-    image_rect = image.get_rect(topleft=(pos[0] - originPos[0], pos[1] - originPos[1]))
-    offset_center_to_pivot = pygame.math.Vector2(pos) - image_rect.center
-    rotated_offset = offset_center_to_pivot.rotate(-angle)
-    rotated_image_center = (pos[0] - rotated_offset.x, pos[1] - rotated_offset.y)
-    
+# Function to rotate an image around its center
+def rotate_image(image, angle):
+    # Rotate the image
     rotated_image = pygame.transform.rotate(image, angle)
-    rotated_image_rect = rotated_image.get_rect(center=rotated_image_center)
+    # Get the rect of the original image
+    orig_rect = image.get_rect()
+    # Get the rect of the rotated image
+    rot_rect = rotated_image.get_rect(center=orig_rect.center)
+    # Return the rotated image and its rect
+    return rotated_image, rot_rect
 
-    print("Blitting at:", rotated_image_rect.topleft)
-    surf.blit(rotated_image, rotated_image_rect)
-
-# Initialize screen
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Mickey Clock")
-clock = pygame.time.Clock()
-
+# Main loop
 running = True
 while running:
-    screen.fill(BACKGROUND_COLOR)
-    screen.blit(clock_face, (0, 0))
-    
-    # Get current time
-    current_time = time.localtime()
-    seconds = current_time.tm_sec
-    minutes = current_time.tm_min
-    
-    # Calculate angles
-    second_angle = -seconds * 6  # 360 degrees / 60 seconds
-    minute_angle = -minutes * 6   # 360 degrees / 60 minutes
-    
-    # Draw hands
-    blitRotate(screen, minute_hand, CENTER, (10, 5), minute_angle)
-    blitRotate(screen, second_hand, CENTER, (10, 5), second_angle)
-    
-    pygame.display.flip()
-    clock.tick(60)
-    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-pygame.quit()
+    # Get current time
+    now = datetime.now()
+    minutes = now.minute
+    seconds = now.second
 
+    # Calculate angles
+    minute_angle = (minutes * 7)  # Add 30 degrees to move forward by 5 minutes
+    second_angle = (seconds / 60) * 360  # Each second corresponds to 6 degrees
+
+    # Rotate hands
+    rotated_minute_hand, minute_rect = rotate_image(minute_hand, -minute_angle)
+    rotated_second_hand, second_rect = rotate_image(second_hand, -second_angle)
+
+    # Clear screen
+    screen.fill((255, 255, 255))
+
+    # Draw clock face (centered)
+    clock_face_rect = clock_face.get_rect(center=(center_x, center_y))
+    screen.blit(clock_face, clock_face_rect)
+
+    # Draw hands (centered)
+    screen.blit(rotated_minute_hand, minute_rect.move(center_x - minute_rect.center[0], center_y - minute_rect.center[1]))
+    screen.blit(rotated_second_hand, second_rect.move(center_x - second_rect.center[0], center_y - second_rect.center[1]))
+
+    # Update display
+    pygame.display.flip()
+
+    # Cap the frame rate
+    pygame.time.Clock().tick(30)
+
+pygame.quit()
