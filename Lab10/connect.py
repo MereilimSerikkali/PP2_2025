@@ -11,7 +11,6 @@ def connect(config):
     except (psycopg2.DatabaseError, Exception) as error:
         print(error)
 
-
 if __name__ == '__main__':
     config = load_config()
     connect(config)
